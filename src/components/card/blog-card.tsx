@@ -12,25 +12,28 @@ type Props = {
 export default function BlogCard({ title, slug, image }: Props) {
   return (
     <motion.div
-      whileHover={{
-        scale: 1.03,
-        rotate: -1,
-        y: -5,
-      }}
-      transition={{ duration: 0.3 }}
+      whileHover={{ y: -8 }}
+      whileTap={{ scale: 0.98 }}
     >
       <Link
         href={`/blog/${slug}`}
-        className="block overflow-hidden rounded-[32px] bg-white shadow-sm"
+        className="group block overflow-hidden rounded-[32px] bg-white shadow-sm transition-all hover:shadow-xl"
       >
-        <img
-          src={image}
-          alt={title}
-          className="h-64 w-full object-cover"
-        />
+        <div className="relative h-56 overflow-hidden md:h-64">
+          <img
+            src={image}
+            alt={title}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+        </div>
 
-        <div className="p-8">
-          <h2 className="text-2xl font-semibold">{title}</h2>
+        <div className="p-6 md:p-8">
+          <h2 className="text-xl font-bold leading-tight text-[#6b705c] transition-colors group-hover:text-[#cb997e] md:text-2xl">
+            {title}
+          </h2>
+          <div className="mt-4 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#a5a58d]">
+            Read Article <span className="transition-transform group-hover:translate-x-1">→</span>
+          </div>
         </div>
       </Link>
     </motion.div>

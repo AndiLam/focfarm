@@ -9,75 +9,85 @@ export default function ServicePreview() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_WP_API}/services?_embed`
-      )
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_WP_API}/services?_embed`)
+        const json = await res.json()
 
-      const json = await res.json()
+        const mapped = json.map((item: any) => ({
+          id: item.id,
+          slug: item.slug,
+          title: item.title?.rendered,
+          description: item.acf?.description || '',
+          image: item._embedded?.['wp:featuredmedia']?.[0]?.source_url || '/fallback.jpg',
+        }))
 
-      const mapped = json.map((item: any) => ({
-        id: item.id,
-        slug: item.slug,
-        title: item.title?.rendered,
-        description: item.acf?.description || '',
-        image:
-          item._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
-          '/fallback.jpg',
-      }))
-
-      setServices(mapped)
+        setServices(mapped)
+      } catch (err) {
+        console.error("Failed to fetch services", err)
+      }
     }
-
     fetchData()
   }, [])
 
   return (
-    <section className="container mx-auto max-w-7xl px-6 py-24">
-
-      <div className="text-center">
-        <p className="text-sm uppercase tracking-[0.3em] text-[#a5a58d]">
+    <section className="container mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24">
+      {/* HEADER */}
+      <div className="mb-10 text-center">
+        <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#a5a58d]">
           Services
         </p>
-
-        <h2 className="mt-4 text-4xl font-bold text-[#6b705c] md:text-5xl">
+        <h2 className="mt-2 text-2xl font-bold leading-tight text-[#6b705c] sm:text-4xl md:text-5xl">
           What We Provide
         </h2>
       </div>
 
-      <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-
-        {services.map((service, i) => (
+      {/* GRID: Menggunakan slice(0, 4) untuk membatasi item */}
+      <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
+        {services.slice(0, 4).map((service, i) => (
           <motion.div
             key={service.id}
-            whileHover={{ y: -8 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: i * 0.1 }}
+            className="col-span-1"
           >
             <Link
               href={`/services/${service.slug}`}
-              className="block overflow-hidden rounded-[36px] bg-white shadow-sm"
+              className="group relative block h-full overflow-hidden rounded-2xl bg-white shadow-sm transition-all active:scale-[0.97]"
             >
-
-              <img
-                src={service.image}
-                className="h-56 w-full object-cover"
-                alt={service.title}
-              />
-
-              <div className="p-8">
-                <h3 className="text-2xl font-semibold text-[#6b705c]">
-                  {service.title}
-                </h3>
-
-                <p className="mt-3 text-gray-600">
-                  {service.description}
-                </p>
+              <div className="relative aspect-square w-full overflow-hidden">
+                <img
+                  src={service.image}
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  alt={service.title}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                
+                <div className="absolute bottom-0 left-0 p-4 md:p-6 text-white">
+                  <h3 
+                    className="text-sm font-bold leading-tight md:text-xl"
+                    dangerouslySetInnerHTML={{ __html: service.title }}
+                  />
+                  <p className="mt-2 hidden text-xs opacity-80 line-clamp-2 md:block">
+                    {service.description}
+                  </p>
+                </div>
               </div>
-
             </Link>
           </motion.div>
         ))}
-
       </div>
 
+      {/* VIEW ALL BUTTON (Muncul jika ada lebih dari 4 service) */}
+      <div className="mt-12 flex justify-center">
+        <Link 
+          href="/services"
+          className="text-sm font-bold uppercase tracking-widest text-[#cb997e] transition-colors hover:text-[#6b705c]"
+        >
+          View All Services <span className="ml-1">→</span>
+        </Link>
+      </div>
     </section>
   )
 }

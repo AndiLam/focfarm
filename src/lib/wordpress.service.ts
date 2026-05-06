@@ -47,8 +47,6 @@ export type Gallery = {
 export async function getHero(): Promise<Hero | null> {
   const data = await fetchAPI<any[]>(`/pages?slug=home&_embed`)
 
-  console.log('🔥 HERO RAW:', JSON.stringify(data, null, 2))
-
   if (!data || !data.length) return null
 
   const page = data[0]
@@ -63,9 +61,7 @@ export async function getHero(): Promise<Hero | null> {
       const media = await fetchAPI<any>(`/media/${mediaId}`)
       image = media?.source_url || image
     }
-  } catch (err) {
-    console.log('⚠️ MEDIA ERROR:', err)
-  }
+  } catch (err) {}
 
   return {
     title: acf.title || page?.title?.rendered || 'FOC FARM',
@@ -162,17 +158,14 @@ async function normalizeGallery(item: any) {
 
   let image = '/fallback.jpg'
 
-  // ✅ PRIORITAS 1: ACF IMAGE URL
   if (typeof acf.image === 'string') {
     image = acf.image
   }
 
-  // ✅ PRIORITAS 2: ACF IMAGE OBJECT
   else if (acf.image?.url) {
     image = acf.image.url
   }
 
-  // ✅ PRIORITAS 3: FETCH MANUAL MEDIA BY ID
   else if (typeof acf.image === 'number' || item.featured_media) {
     const mediaId = acf.image || item.featured_media
 
@@ -183,12 +176,8 @@ async function normalizeGallery(item: any) {
       const media = await res.json()
 
       image = media.source_url || '/fallback.jpg'
-    } catch (err) {
-      console.log('❌ MEDIA FETCH ERROR:', err)
-    }
+    } catch (err) {}
   }
-
-  console.log('🔥 FINAL IMAGE:', image)
 
   return {
     id: item.id,
@@ -199,12 +188,10 @@ async function normalizeGallery(item: any) {
   }
 }
 
-
 export async function getGalleries(): Promise<Gallery[]> {
   const data = await fetchAPI<any[]>(`/gallery?_embed`)
 
   if (!Array.isArray(data)) {
-    console.log('❌ GALLERY ERROR RESPONSE:', data)
     return []
   }
 
@@ -212,4 +199,3 @@ export async function getGalleries(): Promise<Gallery[]> {
     data.map(normalizeGallery)
   )
 }
-

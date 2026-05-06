@@ -9,85 +9,83 @@ export default async function AboutPage() {
   const json = await res.json()
   const about = json?.[0]
 
-  console.log('🔥 ABOUT RAW:', json)
-
-  if (!about) return <div>Not found</div>
+  if (!about) return <div className="flex h-screen items-center justify-center">Not found</div>
 
   const acf = about.acf || {}
-
-const image = await resolveImage(
-  about?._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
-  about?.acf?.image ||
-  '/fallback.jpg'
-)
-
-
-  console.log('🖼️ ABOUT IMAGE:', image)
+  const image = await resolveImage(
+    about?._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
+    about?.acf?.image ||
+    '/fallback.jpg'
+  )
 
   return (
-    <section className="container mx-auto max-w-7xl px-6 pt-32 pb-24">
-
-      <div className="grid items-center gap-12 lg:grid-cols-2">
-
-        {/* TEXT */}
-        <div>
-
-          <p className="text-sm uppercase tracking-[0.3em] text-[#a5a58d]">
+    <section className="container mx-auto max-w-7xl px-6 pb-20 pt-28 md:pb-32 md:pt-40">
+      <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-16">
+        
+        {/* TEXT CONTENT */}
+        <div className="order-2 lg:order-1">
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#a5a58d]">
             About Us
           </p>
 
-          <h1
-            className="mt-4 text-4xl font-bold text-[#6b705c] md:text-5xl"
-            dangerouslySetInnerHTML={{
-              __html: about.title?.rendered || '',
-            }}
-          />
+          <h1 className="mt-4 text-3xl font-bold leading-tight text-[#6b705c] sm:text-4xl md:text-6xl">
+            {acf.title || ''}
+          </h1>
 
           <div
-            className="mt-6 text-lg leading-8 text-gray-700"
+            className="prose prose-slate mt-6 text-base leading-relaxed text-gray-600 md:text-lg md:leading-8"
             dangerouslySetInnerHTML={{
               __html: acf.description || about.content?.rendered || '',
             }}
           />
 
-          {/* VALUE */}
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
-
-            <div className="rounded-[28px] bg-white p-6 shadow-sm">
-              <h3 className="text-xl font-semibold">
-                {acf.vision_title}
+          {/* VISION & MISSION CARDS */}
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 md:gap-6">
+            <div className="rounded-[32px] border border-gray-100 bg-white p-8 shadow-sm transition-shadow hover:shadow-md">
+              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#cb997e]/10 text-[#cb997e]">
+                <span className="font-bold">V</span>
+              </div>
+              <h3 className="text-xl font-bold text-[#6b705c]">
+                {acf.vision_title || 'Vision'}
               </h3>
-              <p className="mt-3 text-gray-600 whitespace-pre-line">
+              <p className="mt-3 text-sm leading-relaxed text-gray-500">
                 {acf.vision_desc}
               </p>
             </div>
 
-            <div className="rounded-[28px] bg-white p-6 shadow-sm">
-              <h3 className="text-xl font-semibold">
-                {acf.mission_title}
+            <div className="rounded-[32px] border border-gray-100 bg-white p-8 shadow-sm transition-shadow hover:shadow-md">
+              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#6b705c]/10 text-[#6b705c]">
+                <span className="font-bold">M</span>
+              </div>
+              <h3 className="text-xl font-bold text-[#6b705c]">
+                {acf.mission_title || 'Mission'}
               </h3>
-              <p className="mt-3 text-gray-600 whitespace-pre-line">
+              <p className="mt-3 text-sm leading-relaxed text-gray-500">
                 {acf.mission_desc}
               </p>
             </div>
-
           </div>
-
         </div>
 
-        {/* IMAGE */}
-        <div className="relative">
-          <img
-            src={image || '/fallback.jpg'}
-            alt="about"
-            className="h-full w-full rounded-[48px] object-cover"
-          />
+        {/* IMAGE SIDE */}
+        <div className="relative order-1 lg:order-2 lg:sticky lg:top-32">
+          <div className="aspect-[4/5] overflow-hidden rounded-[40px] shadow-2xl md:rounded-[60px]">
+            <img
+              src={image || '/fallback.jpg'}
+              alt="about"
+              className="h-full w-full object-cover"
+            />
+          </div>
 
+          {/* Floating Badge - Diperkecil di Mobile */}
           {acf.badge_text && (
-            <div className="absolute bottom-6 left-6 rounded-full bg-white/90 px-5 py-3 text-sm font-medium text-[#6b705c] shadow-sm backdrop-blur">
+            <div className="absolute -bottom-4 -right-2 rounded-2xl bg-[#cb997e] px-4 py-3 text-xs font-bold uppercase tracking-widest text-white shadow-xl md:bottom-10 md:left-10 md:right-auto md:rounded-full md:px-8 md:py-4 md:text-sm">
               {acf.badge_text}
             </div>
           )}
+          
+          {/* Decorative Element */}
+          <div className="absolute -left-4 -top-4 -z-10 h-32 w-32 rounded-full bg-[#a5a58d]/10 blur-3xl" />
         </div>
 
       </div>

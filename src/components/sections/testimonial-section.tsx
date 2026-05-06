@@ -47,9 +47,7 @@ export default function TestimonialSection() {
         )
 
         setData(mapped)
-      } catch (err) {
-        console.log('TESTIMONIAL ERROR:', err)
-      }
+      } catch (err) {}
     }
 
     fetchData()
@@ -57,7 +55,7 @@ export default function TestimonialSection() {
 
   return (
     <section className="container mx-auto px-6 py-24">
-      <div className="rounded-[48px] bg-[#6b705c] px-8 py-16 text-white md:px-16">
+     <div className="rounded-[40px] md:rounded-[60px] bg-[#6b705c] px-6 py-14 md:px-12 md:py-20 text-white">
 
         {/* HEADER */}
         <div className="text-center">
@@ -65,7 +63,7 @@ export default function TestimonialSection() {
             Testimonial
           </p>
 
-          <h2 className="mt-4 text-4xl font-bold md:text-5xl">
+          <h2 className="mt-3 text-2xl sm:text-3xl md:text-5xl font-bold">
             Trusted by Farmers & Partners
           </h2>
         </div>
@@ -73,6 +71,7 @@ export default function TestimonialSection() {
         {/* SWIPER */}
         <div className="mt-14">
           <Swiper
+            className="pb-12"
             modules={[Autoplay, Pagination]}
             spaceBetween={30}
             slidesPerView={1}
@@ -90,17 +89,17 @@ export default function TestimonialSection() {
           >
             {data.map((item) => (
               <SwiperSlide key={item.id}>
-                <div className="rounded-3xl bg-white/10 p-8 backdrop-blur-md">
+                <div className="flex h-full flex-col justify-between rounded-3xl bg-white/5 p-6 md:p-10">
 
-                  <p className="text-lg text-white/90">
+                 <p className="text-lg italic leading-relaxed md:text-xl">
                     “{item.quote}”
                   </p>
 
-                  <div className="mt-8 flex items-center gap-4 border-t border-white/20 pt-6">
+                  <div className="mt-8 flex items-center gap-4 border-t border-white/10 pt-6">
 
                     <img
                       src={item.image}
-                      className="h-12 w-12 rounded-full object-cover"
+                      className="h-14 w-14 rounded-full border-2 border-[#cb997e]/30 object-cover"
                       alt={item.name}
                     />
 

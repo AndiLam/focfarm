@@ -5,28 +5,29 @@ export default async function GalleryPage() {
   const galleries = await getGalleries()
 
   return (
-    <section className="container mx-auto max-w-7xl px-6 pt-32 pb-24">
-
+    <section className="container mx-auto max-w-7xl px-4 pb-24 pt-32 md:px-6 md:pt-40">
       {/* HEADER */}
       <div className="text-center">
-        <p className="text-sm uppercase tracking-[0.3em] text-[#a5a58d]">
+        <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#a5a58d]">
           Gallery
         </p>
 
-        <h1 className="mt-4 text-4xl font-bold text-[#6b705c] md:text-5xl">
-          Life Inside Our Farms
+        <h1 className="mt-4 text-3xl font-bold leading-tight text-[#6b705c] sm:text-4xl md:text-6xl">
+          Life Inside <br className="md:hidden" /> Our Farms
         </h1>
 
-        <p className="mx-auto mt-4 max-w-2xl text-gray-600">
+        <p className="mx-auto mt-4 max-w-2xl text-sm text-gray-600 md:text-base">
           A glimpse into our daily livestock operations — from feeding,
           breeding, to sustainable production processes.
         </p>
       </div>
 
-      {/* GRID (Masonry style) */}
-      <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {galleries.map((item) => (
-          <div key={item.id} className="mb-6 break-inside-avoid">
+      <div className="mt-12 grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-5">
+        {galleries.map((item, i) => (
+          <div 
+            key={item.id} 
+            className={i % 4 === 0 ? "col-span-1" : "col-span-1"}
+          >
             <GalleryItem
               src={item.image}
               description={item.description}
@@ -34,7 +35,6 @@ export default async function GalleryPage() {
           </div>
         ))}
       </div>
-
     </section>
   )
 }

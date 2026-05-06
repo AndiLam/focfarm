@@ -98,7 +98,7 @@ export default function Navbar() {
                     href={item.href}
                     onClick={() => setOpen(false)}
                     className={`text-2xl font-semibold ${
-                      active ? 'text-[#6b705c]' : 'text-[#2f2f2f]'
+                      active ? 'text-[#a4ae82]' : 'text-[#272727]'
                     }`}
                   >
                     {item.name}
@@ -106,6 +106,15 @@ export default function Navbar() {
                 </motion.div>
               )
             })}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="absolute bottom-12 text-center"
+            >
+              <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Get in Touch</p>
+              <p className="mt-2 font-medium text-[#6b705c]">hello@focfarm.id</p>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -113,3 +122,4 @@ export default function Navbar() {
     </header>
   )
 }
+

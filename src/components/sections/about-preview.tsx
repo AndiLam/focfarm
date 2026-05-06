@@ -23,7 +23,6 @@ export default function AboutPreview() {
 
         if (isMounted) setAbout(data)
 
-        // ✅ FIX: ambil URL langsung (NO resolveImage, NO ID)
         const img =
           data?._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
           data?.acf?.image ||
@@ -33,9 +32,7 @@ export default function AboutPreview() {
           setImage(img)
         }
 
-      } catch (err) {
-        console.log('ABOUT PREVIEW ERROR:', err)
-      }
+      } catch (err) {}
     }
 
     fetchData()
@@ -50,7 +47,7 @@ export default function AboutPreview() {
   const acf = about.acf || {}
 
   return (
-    <section className="container mx-auto px-6 py-24">
+   <section className="container mx-auto px-4 sm:px-6 py-16 md:py-24">
 
       <div className="grid items-center gap-12 lg:grid-cols-2">
 
@@ -61,7 +58,7 @@ export default function AboutPreview() {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="overflow-hidden rounded-[48px]"
+            className="aspect-[4/3] w-full overflow-hidden rounded-3xl md:aspect-square md:rounded-[48px]"
           >
             <motion.img
               whileHover={{ scale: 1.05 }}
@@ -86,18 +83,18 @@ export default function AboutPreview() {
           </p>
 
           <h2
-            className="mt-4 text-4xl font-bold text-[#6b705c]"
+            className="mt-3 text-2xl sm:text-3xl md:text-4xl font-bold text-[#6b705c]"
             dangerouslySetInnerHTML={{
               __html: about.title?.rendered || '',
             }}
           />
 
-          <p className="mt-6 text-lg text-gray-700">
+          <p className="mt-4 text-base sm:text-lg text-gray-700">
             {acf.short_description}
           </p>
 
           {/* HIGHLIGHT */}
-          <div className="mt-8 grid gap-4">
+          <div className="mt-8 space-y-4">
 
             <div className="flex items-start gap-3">
               <div className="mt-2 h-2 w-2 rounded-full bg-[#cb997e]" />
