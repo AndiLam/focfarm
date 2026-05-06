@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function Navbar() {
   const pathname = usePathname()
@@ -17,6 +17,24 @@ export default function Navbar() {
     { name: 'Blog', href: '/blog' },
     { name: 'Contact', href: '/contact' },
   ]
+
+  useEffect(() => {
+    if (open) {
+      const scrollBarWidth =
+        window.innerWidth - document.documentElement.clientWidth
+
+      document.body.style.overflow = 'hidden'
+      document.body.style.paddingRight = `${scrollBarWidth}px`
+    } else {
+      document.body.style.overflow = 'auto'
+      document.body.style.paddingRight = '0px'
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto'
+      document.body.style.paddingRight = '0px'
+    }
+  }, [open])
 
   return (
     <header className="fixed left-0 top-0 z-50 w-full">
@@ -73,7 +91,7 @@ export default function Navbar() {
                 closed: { rotate: 0, y: -6 },
                 open: { rotate: 45, y: 0 },
               }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              transition={{ duration: 0.3 }}
             />
 
             {/* MIDDLE */}
@@ -93,7 +111,7 @@ export default function Navbar() {
                 closed: { rotate: 0, y: 6 },
                 open: { rotate: -45, y: 0 },
               }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              transition={{ duration: 0.3 }}
             />
           </motion.button>
 
@@ -111,7 +129,7 @@ export default function Navbar() {
             className="fixed inset-0 z-40 bg-white flex items-center justify-center"
           >
 
-            {/* CONTENT WRAPPER (biar ga ketutup klik background) */}
+            {/* CONTENT */}
             <div
               onClick={(e) => e.stopPropagation()}
               className="flex flex-col items-center gap-8"
@@ -144,7 +162,7 @@ export default function Navbar() {
                     <Link
                       href={item.href}
                       onClick={() => setOpen(false)}
-                      className={`text-2xl font-semibold transition ${
+                      className={`text-2xl font-semibold ${
                         active ? 'text-[#a4ae82]' : 'text-[#272727]'
                       }`}
                     >
@@ -154,7 +172,7 @@ export default function Navbar() {
                 )
               })}
 
-              {/* FOOTER TEXT */}
+              {/* FOOTER */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
