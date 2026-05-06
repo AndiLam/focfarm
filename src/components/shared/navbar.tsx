@@ -34,7 +34,6 @@ export default function Navbar() {
 
           {/* DESKTOP MENU */}
           <nav className="hidden md:flex items-center gap-8">
-
             {menu.map((item) => {
               const active = pathname === item.href
 
@@ -59,62 +58,118 @@ export default function Navbar() {
                 </Link>
               )
             })}
-
           </nav>
 
-          {/* MOBILE BUTTON */}
-          <button
+          {/* MOBILE BUTTON (MORPH) */}
+          <motion.button
             onClick={() => setOpen(!open)}
-            className="flex flex-col gap-1 md:hidden"
+            className="relative h-6 w-6 md:hidden"
+            animate={open ? 'open' : 'closed'}
           >
-            <span className="h-[2px] w-6 bg-[#2f2f2f]" />
-            <span className="h-[2px] w-6 bg-[#2f2f2f]" />
-            <span className="h-[2px] w-6 bg-[#2f2f2f]" />
-          </button>
+            {/* TOP */}
+            <motion.span
+              className="absolute left-0 top-1/2 h-[2px] w-6 -translate-y-1/2 bg-[#2f2f2f]"
+              variants={{
+                closed: { rotate: 0, y: -6 },
+                open: { rotate: 45, y: 0 },
+              }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+            />
+
+            {/* MIDDLE */}
+            <motion.span
+              className="absolute left-0 top-1/2 h-[2px] w-6 -translate-y-1/2 bg-[#2f2f2f]"
+              variants={{
+                closed: { opacity: 1 },
+                open: { opacity: 0 },
+              }}
+              transition={{ duration: 0.2 }}
+            />
+
+            {/* BOTTOM */}
+            <motion.span
+              className="absolute left-0 top-1/2 h-[2px] w-6 -translate-y-1/2 bg-[#2f2f2f]"
+              variants={{
+                closed: { rotate: 0, y: 6 },
+                open: { rotate: -45, y: 0 },
+              }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+            />
+          </motion.button>
 
         </div>
       </div>
 
-      {/* MOBILE FULLSCREEN MENU */}
+      {/* MOBILE MENU */}
       <AnimatePresence>
         {open && (
           <motion.div
+            onClick={() => setOpen(false)}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-white flex flex-col items-center justify-center gap-8"
+            className="fixed inset-0 z-40 bg-white flex items-center justify-center"
           >
-            {menu.map((item, i) => {
-              const active = pathname === item.href
 
-              return (
-                <motion.div
-                  key={item.href}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                >
-                  <Link
-                    href={item.href}
-                    onClick={() => setOpen(false)}
-                    className={`text-2xl font-semibold ${
-                      active ? 'text-[#a4ae82]' : 'text-[#272727]'
-                    }`}
-                  >
-                    {item.name}
-                  </Link>
-                </motion.div>
-              )
-            })}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="absolute bottom-12 text-center"
+            {/* CONTENT WRAPPER (biar ga ketutup klik background) */}
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="flex flex-col items-center gap-8"
             >
-              <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Get in Touch</p>
-              <p className="mt-2 font-medium text-[#6b705c]">hello@focfarm.id</p>
-            </motion.div>
+
+              {/* CLOSE BUTTON */}
+              <motion.button
+                onClick={() => setOpen(false)}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="absolute top-6 right-6 flex h-10 w-10 items-center justify-center rounded-full border border-gray-300"
+              >
+                <span className="relative block h-5 w-5">
+                  <span className="absolute top-1/2 left-0 h-[2px] w-full -translate-y-1/2 rotate-45 bg-black" />
+                  <span className="absolute top-1/2 left-0 h-[2px] w-full -translate-y-1/2 -rotate-45 bg-black" />
+                </span>
+              </motion.button>
+
+              {/* MENU ITEMS */}
+              {menu.map((item, i) => {
+                const active = pathname === item.href
+
+                return (
+                  <motion.div
+                    key={item.href}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.1 }}
+                  >
+                    <Link
+                      href={item.href}
+                      onClick={() => setOpen(false)}
+                      className={`text-2xl font-semibold transition ${
+                        active ? 'text-[#a4ae82]' : 'text-[#272727]'
+                      }`}
+                    >
+                      {item.name}
+                    </Link>
+                  </motion.div>
+                )
+              })}
+
+              {/* FOOTER TEXT */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="absolute bottom-12 text-center"
+              >
+                <p className="text-xs font-bold uppercase tracking-widest text-gray-400">
+                  Get in Touch
+                </p>
+                <p className="mt-2 font-medium text-[#6b705c]">
+                  hello@focfarm.id
+                </p>
+              </motion.div>
+
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -122,4 +177,3 @@ export default function Navbar() {
     </header>
   )
 }
-
