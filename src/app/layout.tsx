@@ -20,8 +20,8 @@ const playfair = Playfair_Display({
 })
 
 export const metadata: Metadata = {
-  title: 'Company Profile',
-  description: 'Modern Company Profile Website',
+  title: 'FOC FARM',
+  description: 'Your Trusted Partner for Livestock Health & Growth',
 }
 
 export default function RootLayout({
